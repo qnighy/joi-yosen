@@ -27,5 +27,7 @@ out5.txt: $(PREFIX)-in5.txt Main.class
 
 Main.class:
 	$(JAVAC) $(JAVACFLAGS) *.java
+	$(JAVA) Main < $(PREFIX)-in_s1.txt
+	$(JAVA) Main < $(PREFIX)-in_s2.txt
 
 

@@ -2,7 +2,7 @@
 
 CS = gmcs
 RUNNET = mono
-PREFIX = 2011-yo-t1
+PREFIX = 2011-yo-t2
 
 OBJS = out1.txt out2.txt out3.txt out4.txt out5.txt
 

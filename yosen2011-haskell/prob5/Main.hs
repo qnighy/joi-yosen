@@ -30,11 +30,17 @@ calc2 m (w,h) s g = runST $ do
         tim <- newArray (0,w*h) (-1)
         writeArray q 0 s
         writeArray tim s 0
-        bfs m (w,h) q qsR qeR tim
+        forM_ (zip m [0..]) (\x->let (c,i) = x in
+          if c=='X' then
+            writeArray tim i (-2)
+          else
+            return ()
+          )
+        bfs (w,h) q qsR qeR tim
         readArray tim g
 
-bfs :: String -> (Int,Int) -> STUArray s Int Int -> STRef s Int -> STRef s Int -> STUArray s Int Int -> ST s ()
-bfs m dim q qsR qeR tim = do
+bfs :: (Int,Int) -> STUArray s Int Int -> STRef s Int -> STRef s Int -> STUArray s Int Int -> ST s ()
+bfs dim q qsR qeR tim = do
         qs <- readSTRef qsR
         qe <- readSTRef qeR
         if qs==qe then return () else do
@@ -43,13 +49,13 @@ bfs m dim q qsR qeR tim = do
           modifySTRef qsR (+1)
           forM_ (neighbors dim cur) (\nei-> do
             t <- readArray tim nei
-            if t>=0 || m!!nei=='X' then return () else do
+            if t/=(-1) then return () else do
               qe' <- readSTRef qeR
               writeArray q qe' nei
               modifySTRef qeR (+1)
               writeArray tim nei (curtim+1)
             )
-          bfs m dim q qsR qeR tim
+          bfs dim q qsR qeR tim
 
 neighbors :: (Int,Int) -> Int -> [Int]
 neighbors dim p =
